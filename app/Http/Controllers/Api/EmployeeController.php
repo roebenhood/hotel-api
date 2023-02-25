@@ -135,5 +135,20 @@ class EmployeeController extends Controller
             return $this->apiResponse->responseWithStatusAndMessage(500);
         }
     }
+
+    public function employeeLogin($username){
+        try {
+            $employee = Employee::find($username);
+            if($employee){
+                $employee->delete();
+                return $this->apiResponse->responseWithStatusAndMessage(200);
+
+            } else {
+                return $this->apiResponse->responseWithStatusAndMessage(404);
+            }
+        } catch (\Exception $e) {
+            return $this->apiResponse->responseWithStatusAndMessage(500);
+        }
+    }
 }
 
