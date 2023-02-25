@@ -25,7 +25,7 @@ class ApiResponse
             case 403:
                 return 'Forbidden';
             case 404:
-                return 'No such record found';
+                return 'No such record found bobo';
             case 500:
                 return 'Internal server error tanga';
             default:
