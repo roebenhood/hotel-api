@@ -8,7 +8,7 @@ class ApiResponse
     {
         $responseData = [
             'status' => $status,
-            'message' => $errors !== null ? $errors : self::getStatusMessage($status) 
+            'body' => $errors !== null ? $errors : self::getStatusMessage($status)
         ];
 
         return response()->json($responseData, $status);
@@ -17,7 +17,7 @@ class ApiResponse
     public static function getStatusMessage($statusCode) {
         switch ($statusCode) {
             case 200:
-                return 'Deleted successfully';
+                return 'Sucess';
             case 400:
                 return 'Bad request';
             case 401:

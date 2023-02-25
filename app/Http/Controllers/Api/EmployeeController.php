@@ -20,11 +20,7 @@ class EmployeeController extends Controller
         try {
             $employees = Employee::all();
             if($employees->count() > 0){
-                $data = [
-                    'status' => 200,
-                    'employees' => $employees
-                ];
-                return response()->json($data, 200);
+                return $this->apiResponse->responseWithStatusAndMessage(200,$employees);
             }
             else {
                 return response()->json(['status' => 404, 'message' => 'No employees found'], 404);
@@ -74,15 +70,9 @@ class EmployeeController extends Controller
         try {
             $employee = Employee::find($id);
             if($employee){
-                return response()->json([
-                    'status'=>200,
-                    'employee'=>$employee
-                ],200);
+                return $this->apiResponse->responseWithStatusAndMessage(200,$employee);
             } else {
-                return response()->json([
-                    'status'=>404,
-                    'message'=>"No such record found!"
-                ],404);
+                return $this->apiResponse->responseWithStatusAndMessage(404);
             }
         } catch (\Exception $e) {
             return $this->apiResponse->responseWithStatusAndMessage(500, 'Something went wrong.');
@@ -104,7 +94,6 @@ class EmployeeController extends Controller
                 'contactNo' => 'required|digits:10',
                 'password' => 'required|string|max:191',
             ]);
-            
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 422,
@@ -112,8 +101,6 @@ class EmployeeController extends Controller
                 ], 422);
             } else {
                 $employee = Employee::find($id);
-                
-            
                 if ($employee) {
                     $employee->update([
                         'employee_id' => $request->employee_id,
@@ -124,16 +111,9 @@ class EmployeeController extends Controller
                         'contactNo' => $request->contactNo,
                         'password' => bcrypt($request->password)
                     ]);
-                    return response()->json([
-                        'status' => 200,
-                        'message' => 'Employee record updated successfully',
-                    ], 200);
+                    return $this->apiResponse->responseWithStatusAndMessage(200);
                 } else {
-                    $this->apiResponse->responseWithStatusAndMessage(404, 'No such record found');
-                    return response()->json([
-                        'status' => 404,
-                        'message' => 'No such record found.',
-                    ], 404);
+                    return $this->apiResponse->responseWithStatusAndMessage(404);
                 }
             }
         } catch (\Exception $e) {
