@@ -135,5 +135,18 @@ class EmployeeController extends Controller
             return $this->apiResponse->responseWithStatusAndMessage(500);
         }
     }
+
+    public function employeeLogin(Request $request){
+        try {
+            $employee = Employee::find($request->username);
+            if($employee && Hash::check($request->password, $employee->password)){
+                return $this->apiResponse->responseWithStatusAndMessage(200 ,'You shall pass!');
+            } else {
+                return $this->apiResponse->responseWithStatusAndMessage(404);
+            }
+        } catch (\Exception $e) {
+            return $this->apiResponse->responseWithStatusAndMessage(500, 'Something went wrong.');
+        }
+    }
 }
 
