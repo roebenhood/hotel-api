@@ -27,7 +27,7 @@ class ApiResponse
             case 404:
                 return 'No such record found';
             case 500:
-                return 'Internal server error';
+                return 'Internal server error tanga';
             default:
                 return 'Unknown error';
         }
