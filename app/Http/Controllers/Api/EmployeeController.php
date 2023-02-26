@@ -8,6 +8,8 @@ use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Hash;
+use Session;
 
 class EmployeeController extends Controller
 {
@@ -137,12 +139,30 @@ class EmployeeController extends Controller
     }
 
     public function employeeLogin(Request $request){
+
         try {
-            $employee = Employee::find($request->username);
-            if($employee && Hash::check($request->password, $employee->password)){
-                return $this->apiResponse->responseWithStatusAndMessage(200 ,'You shall pass!');
-            } else {
-                return $this->apiResponse->responseWithStatusAndMessage(404);
+            $validator = Validator::make($request->all(), [
+                'username' => 'required|string|max:191',
+                'password' => 'required|string|max:191',
+            ]);
+            
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 422,
+                    'errors' => $validator->messages(),
+                ], 422);
+            }else{
+                $employee = Employee::where('username', '=', $request->username)->first();
+                if($employee){
+                    if(Hash::check($request->password, $employee->password)){
+                        // $request->session()->put('loginId', $employee->id);
+                        return $this->apiResponse->responseWithStatusAndMessage(200 ,'You shall pass!');
+                    }else{
+                        return $this->apiResponse->responseWithStatusAndMessage(422, 'Invalid Password.');
+                    }
+                } else {
+                    return $this->apiResponse->responseWithStatusAndMessage(404);
+                }
             }
         } catch (\Exception $e) {
             return $this->apiResponse->responseWithStatusAndMessage(500, 'Something went wrong.');
