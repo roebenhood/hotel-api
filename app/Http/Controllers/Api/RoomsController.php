@@ -64,4 +64,51 @@ class RoomsController extends Controller
             return $this->apiResponse->responseWithStatusAndMessage(500);
         }
     }
+
+    public function updateRoom (Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'roomName' => 'required|string|max:191',
+                'roomDescription' => 'required|string|max:191',
+                'roomCapacity' => 'required|string|max:191',
+                'roomPrice' => 'required|string|max:191',
+            ]);
+
+            if ($validator->fails()) {
+                return $this->apiResponse->responseWithStatusAndMessage(422, $validator->message()->all());
+            }else{
+                $room = Rooms::find($request->id);
+
+                if ($room) {
+                    $room-> update([
+                        'roomName' => $request->roomName,
+                        'roomDescription' => $request->roomDescription,
+                        'roomCapacity' => $request->roomCapacity,
+                        'roomPrice' => $request->roomPrice,
+                        'updatedOn' => now(),
+                    ]);
+                    return $this->apiResponse->responseWithStatusAndMessage(200);
+                }else{
+                    return $this->apiResponse->responseWithStatusAndMessage(404);
+                }
+            }
+        } catch (\Exepction $e) {
+            return $this->apiResponse->responseWithStatusAndMessage(500);
+        }
+    }
+
+    public function deleteRoom (Request $request) {
+        try {
+            $room = Rooms::find($request->id);
+
+            if ($room) {
+                $room->delete();
+                return $this->apiResponse->responseWithStatusAndMessage(200);
+            }else{
+                return $this->apiResponse->responseWithStatusAndMessage(404);
+            }
+        } catch (\Exception $e) {
+            return $this->apiResponse->responseWithStatusAndMessage(500);
+        }
+    }
 }

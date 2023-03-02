@@ -36,5 +36,7 @@ Route::post('employees/login', [EmployeeController::class, 'employeeLogin']);
 
 Route::get('rooms', [RoomsController::class, 'getAllRooms']);
 Route::post('rooms', [RoomsController::class, 'addNewRoom']);
+Route::put('rooms/update', [RoomsController::class, 'updateRoom']);
+Route::delete('rooms/delete', [RoomsController::class, 'deleteRoom']);
 
 // END: Rooms API
