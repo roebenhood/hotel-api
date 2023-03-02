@@ -19,4 +19,6 @@ class Employee extends Model
         'contactNo',
         'password'
     ];
+
+    public $timestamps = false;
 }
